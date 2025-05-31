@@ -1,0 +1,35 @@
+<div class="max-w-3xl mx-auto bg-slate-800 rounded-lg shadow-lg p-8 mt-8">
+  <div class="flex flex-col md:flex-row md:items-center md:justify-between mb-4">
+    <div class="flex items-center gap-2 mb-2 md:mb-0">
+      <span class="px-2 py-1 bg-slate-600 rounded text-xs"><%= article.category %></span>
+      <span class="text-slate-400 text-xs">Views: <%= article.viewCount %></span>
+    </div>
+    <div class="flex items-center gap-2 text-xs text-slate-400">
+      <span>By <%= article.author ? article.author.name : 'Unknown' %></span>
+      <span>•</span>
+      <span><%= article.createdAt.toLocaleDateString() %></span>
+    </div>
+  </div>
+  <h1 class="text-2xl font-bold mb-4 text-cyan-400"><%= article.title %></h1>
+  <div class="prose prose-invert max-w-none mb-6 text-slate-200">
+    <%- article.content %>
+  </div>
+  <% if (article.tags && article.tags.length > 0) { %>
+    <div class="mb-6 flex flex-wrap gap-2">
+      <% article.tags.forEach(tag => { %>
+        <span class="bg-cyan-700/30 text-cyan-300 px-2 py-1 rounded text-xs">#<%= tag %></span>
+      <% }) %>
+    </div>
+  <% } %>
+  <div class="flex justify-between items-center mt-8">
+    <a href="/knowledge" class="text-cyan-400 hover:text-cyan-300">← Back to Knowledge Base</a>
+    <% if (locals.user && locals.user.isAdmin) { %>
+      <div class="flex gap-2">
+        <a href="/knowledge/edit/<%= article._id %>" class="text-slate-400 hover:text-cyan-400">Edit</a>
+        <form method="POST" action="/knowledge/article/<%= article._id %>?_method=DELETE" onsubmit="return confirm('Are you sure you want to delete this article?');">
+          <button type="submit" class="text-slate-400 hover:text-red-400">Delete</button>
+        </form>
+      </div>
+    <% } %>
+  </div>
+</div>

@@ -1,0 +1,154 @@
+<!-- Admin Orders Management Page -->
+<div class="bg-slate-800 rounded-lg shadow-lg p-6">
+  <!-- Search and Filter -->
+  <div class="mb-6">
+    <div class="flex flex-col md:flex-row gap-4">
+      <div class="flex-1">
+        <input type="text" id="searchOrders" placeholder="Search by order ID or customer name" class="w-full px-4 py-2 bg-slate-700 border border-slate-600 rounded-md">
+      </div>
+      <div class="flex gap-4">
+        <select id="statusFilter" class="px-4 py-2 bg-slate-700 border border-slate-600 rounded-md">
+          <option value="">All Statuses</option>
+          <option value="Pending">Pending</option>
+          <option value="Processing">Processing</option>
+          <option value="Shipped">Shipped</option>
+          <option value="Delivered">Delivered</option>
+          <option value="Cancelled">Cancelled</option>
+        </select>
+        <select id="accountTypeFilter" class="px-4 py-2 bg-slate-700 border border-slate-600 rounded-md">
+          <option value="">All Account Types</option>
+          <option value="Individual">Individual</option>
+          <option value="Business">Business</option>
+        </select>
+      </div>
+    </div>
+  </div>
+
+  <!-- Orders Table -->
+  <div class="overflow-x-auto">
+    <table class="w-full">
+      <thead class="bg-slate-700">
+        <tr>
+          <th class="px-4 py-3 text-left">Order ID</th>
+          <th class="px-4 py-3 text-left">Customer</th>
+          <th class="px-4 py-3 text-left">Date</th>
+          <th class="px-4 py-3 text-left">Total</th>
+          <th class="px-4 py-3 text-left">Status</th>
+          <th class="px-4 py-3 text-left">Payment</th>
+          <th class="px-4 py-3 text-left">Actions</th>
+        </tr>
+      </thead>
+      <tbody>
+        <% orders.forEach(order => { %>
+          <tr class="border-b border-slate-700 hover:bg-slate-700/50">
+            <td class="px-4 py-3">#<%= order._id.toString().slice(-6) %></td>
+            <td class="px-4 py-3">
+              <div>
+                <%= order.user.name %>
+                <span class="text-sm text-slate-400 block"><%= order.user.email %></span>
+              </div>
+            </td>
+            <td class="px-4 py-3"><%= new Date(order.createdAt).toLocaleDateString() %></td>
+            <td class="px-4 py-3">$<%= order.totalAmount.toFixed(2) %></td>
+            <td class="px-4 py-3">
+              <select 
+                onchange="updateOrderStatus('<%= order._id %>', this.value)"
+                class="px-2 py-1 bg-slate-700 border border-slate-600 rounded text-sm">
+                <option value="Pending" <%= order.status === 'Pending' ? 'selected' : '' %>>Pending</option>
+                <option value="Processing" <%= order.status === 'Processing' ? 'selected' : '' %>>Processing</option>
+                <option value="Shipped" <%= order.status === 'Shipped' ? 'selected' : '' %>>Shipped</option>
+                <option value="Delivered" <%= order.status === 'Delivered' ? 'selected' : '' %>>Delivered</option>
+                <option value="Cancelled" <%= order.status === 'Cancelled' ? 'selected' : '' %>>Cancelled</option>
+              </select>
+            </td>
+            <td class="px-4 py-3">
+              <select 
+                onchange="updatePaymentStatus('<%= order._id %>', this.value)"
+                class="px-2 py-1 bg-slate-700 border border-slate-600 rounded text-sm">
+                <option value="Pending" <%= order.paymentStatus === 'Pending' ? 'selected' : '' %>>Pending</option>
+                <option value="Paid" <%= order.paymentStatus === 'Paid' ? 'selected' : '' %>>Paid</option>
+                <option value="Failed" <%= order.paymentStatus === 'Failed' ? 'selected' : '' %>>Failed</option>
+                <option value="Refunded" <%= order.paymentStatus === 'Refunded' ? 'selected' : '' %>>Refunded</option>
+              </select>
+            </td>
+            <td class="px-4 py-3">
+              <a href="/admin/orders/<%= order._id %>" class="text-cyan-400 hover:text-cyan-300">View Details</a>
+            </td>
+          </tr>
+        <% }); %>
+      </tbody>
+    </table>
+  </div>
+</div>
+
+<script>
+  // Search and filter functionality
+  const searchInput = document.getElementById('searchOrders');
+  const statusFilter = document.getElementById('statusFilter');
+  const accountTypeFilter = document.getElementById('accountTypeFilter');
+
+  function filterOrders() {
+    const searchTerm = searchInput.value.toLowerCase();
+    const status = statusFilter.value;
+    const accountType = accountTypeFilter.value;
+
+    document.querySelectorAll('tbody tr').forEach(row => {
+      const orderId = row.cells[0].textContent.toLowerCase();
+      const customerName = row.cells[1].textContent.toLowerCase();
+      const orderStatus = row.cells[4].querySelector('select').value;
+      const customerType = row.cells[1].textContent.includes('Business') ? 'Business' : 'Individual';
+
+      const matchesSearch = orderId.includes(searchTerm) || customerName.includes(searchTerm);
+      const matchesStatus = !status || orderStatus === status;
+      const matchesType = !accountType || customerType === accountType;
+
+      row.style.display = matchesSearch && matchesStatus && matchesType ? '' : 'none';
+    });
+  }
+
+  searchInput.addEventListener('input', filterOrders);
+  statusFilter.addEventListener('change', filterOrders);
+  accountTypeFilter.addEventListener('change', filterOrders);
+
+  // Update order status
+  async function updateOrderStatus(orderId, status) {
+    try {
+      const response = await fetch(`/admin/orders/${orderId}/update`, {
+        method: 'POST',
+        headers: {
+          'Content-Type': 'application/json',
+        },
+        body: JSON.stringify({ status })
+      });
+
+      if (!response.ok) throw new Error('Failed to update order status');
+      
+      // Optionally refresh the page or show a success message
+      location.reload();
+    } catch (error) {
+      console.error('Error updating order status:', error);
+      alert('Failed to update order status');
+    }
+  }
+
+  // Update payment status
+  async function updatePaymentStatus(orderId, paymentStatus) {
+    try {
+      const response = await fetch(`/admin/orders/${orderId}/update`, {
+        method: 'POST',
+        headers: {
+          'Content-Type': 'application/json',
+        },
+        body: JSON.stringify({ paymentStatus })
+      });
+
+      if (!response.ok) throw new Error('Failed to update payment status');
+      
+      // Optionally refresh the page or show a success message
+      location.reload();
+    } catch (error) {
+      console.error('Error updating payment status:', error);
+      alert('Failed to update payment status');
+    }
+  }
+</script>

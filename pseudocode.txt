@@ -1,0 +1,53 @@
+User navigates to Support Request Form page
+
+IF user is not authenticated
+    Redirect to login page
+ELSE
+    Display support request form
+
+User fills out form (device type, category, description, etc.)
+User submits form
+
+ON form submission:
+    Validate form fields
+    IF validation fails
+        Show error message
+        Return to form
+    ELSE
+        Create new SupportRequest object with:
+            - user ID
+            - device type
+            - category
+            - description
+            - status = "Pending"
+            - createdAt = current date/time
+            - (optional) attached files, address, spare parts, etc.
+        Save SupportRequest to database
+
+        IF save is successful
+            Show success message
+            Redirect to support history or dashboard
+        ELSE
+            Show error message
+            Return to form
+
+----------------------------------------------
+
+User navigates to Login page
+
+User enters email and password
+User submits login form
+
+ON form submission:
+    Find user in database by email
+    IF user not found
+        Show "Invalid credentials" error
+        Return to login form
+    ELSE
+        Compare entered password with stored hashed password
+        IF password does not match
+            Show "Invalid credentials" error
+            Return to login form
+        ELSE
+            Set user session (store user ID and info in session)
+            Redirect to dashboard or previous page

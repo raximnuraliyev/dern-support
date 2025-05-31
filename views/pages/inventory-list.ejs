@@ -1,0 +1,55 @@
+<!-- Inventory List Page -->
+<div class="bg-slate-800 rounded-lg shadow-lg p-6">
+  <h2 class="text-2xl font-semibold mb-6">Inventory Management</h2>
+  <% if (items.length === 0) { %>
+    <div class="text-center text-slate-400 py-12">No inventory items found.</div>
+  <% } else { %>
+    <div class="overflow-x-auto">
+      <table class="min-w-full text-slate-300">
+        <thead>
+          <tr>
+            <th class="px-4 py-2 text-left">Image</th>
+            <th class="px-4 py-2 text-left">Name</th>
+            <th class="px-4 py-2 text-left">Category</th>
+            <th class="px-4 py-2 text-left">Quantity</th>
+            <th class="px-4 py-2 text-left">Price ($)</th>
+            <th class="px-4 py-2 text-left">Last Restocked</th>
+            <th class="px-4 py-2"></th>
+          </tr>
+        </thead>
+        <tbody>
+          <% items.forEach(item => { %>
+            <tr class="border-b border-slate-700 hover:bg-slate-700/30 transition">
+              <td class="px-4 py-2">
+                <img src="<%= item.imageUrl %>" alt="<%= item.name %>" class="w-12 h-12 object-cover rounded-md">
+              </td>
+              <td class="px-4 py-2 font-medium"><%= item.name %></td>
+              <td class="px-4 py-2"><%= item.category %></td>
+              <td class="px-4 py-2">
+                <span class="px-2 py-1 rounded-full text-xs font-semibold
+                  <%= item.quantity === 0 ? 'bg-red-500/20 text-red-400' :
+                      item.quantity < 5 ? 'bg-yellow-500/20 text-yellow-400' :
+                      'bg-green-500/20 text-green-400' %>">
+                  <%= item.quantity %>
+                </span>
+              </td>
+              <td class="px-4 py-2">$<%= item.price.toFixed(2) %></td>
+              <td class="px-4 py-2 text-sm"><%= item.lastRestocked ? new Date(item.lastRestocked).toLocaleDateString() : '' %></td>
+              <td class="px-4 py-2">
+                <a href="/inventory/item/<%= item._id %>" class="text-cyan-400 hover:text-cyan-300 font-semibold">View</a>
+                <% if (locals.user && locals.user.isAdmin) { %>
+                  | <a href="/inventory/edit/<%= item._id %>" class="text-yellow-400 hover:text-yellow-300">Edit</a>
+                <% } %>
+              </td>
+            </tr>
+          <% }); %>
+        </tbody>
+      </table>
+    </div>
+  <% } %>
+  <% if (locals.user && locals.user.isAdmin) { %>
+    <div class="mt-6 text-right">
+      <a href="/inventory/new" class="bg-cyan-600 hover:bg-cyan-700 text-white px-6 py-2 rounded-md font-semibold transition duration-200">Add Item</a>
+    </div>
+  <% } %>
+</div>

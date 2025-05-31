@@ -1,0 +1,175 @@
+<% var businessArticles = typeof businessArticles !== 'undefined' ? businessArticles : null; %>
+<% var individualArticles = typeof individualArticles !== 'undefined' ? individualArticles : null; %>
+<div class="relative overflow-hidden">
+  <!-- Hero section -->
+  <div class="bg-slate-900 pt-10 pb-14 px-6 md:px-0">
+    <div class="container mx-auto max-w-6xl">
+      <div class="flex flex-col md:flex-row md:items-center md:space-x-12">
+        <div class="md:w-1/2 mb-10 md:mb-0">
+          <h1 class="text-4xl md:text-5xl font-bold text-white mb-6 leading-tight">
+            IT Support <span class="text-cyan-400">Simplified</span>
+          </h1>
+          <p class="text-xl text-slate-300 mb-8">
+            Expert IT support for businesses and individuals. Get help when you need it, with our comprehensive knowledge base and professional support team.
+          </p>
+          <div class="flex flex-col sm:flex-row space-y-4 sm:space-y-0 sm:space-x-4">
+            <a href="/register" class="inline-block bg-cyan-600 hover:bg-cyan-700 text-white font-medium py-3 px-6 rounded-md transition duration-200 text-center">
+              Get Started
+            </a>
+            <a href="/login" class="inline-block bg-slate-800 hover:bg-slate-700 text-white font-medium py-3 px-6 rounded-md transition duration-200 text-center">
+              Sign In
+            </a>
+          </div>
+        </div>
+        <div class="md:w-1/2">
+          <div class="relative">
+            <div class="bg-slate-800 rounded-lg p-6 shadow-xl">
+              <div class="flex items-center mb-6">
+                <div class="w-3 h-3 rounded-full bg-red-500 mr-2"></div>
+                <div class="w-3 h-3 rounded-full bg-yellow-500 mr-2"></div>
+                <div class="w-3 h-3 rounded-full bg-green-500"></div>
+              </div>
+              <div class="space-y-4">
+                <div class="bg-slate-700 rounded p-4">
+                  <div class="flex items-center">
+                    <svg xmlns="http://www.w3.org/2000/svg" width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" class="text-cyan-400 mr-3">
+                      <rect x="2" y="3" width="20" height="14" rx="2" ry="2"></rect>
+                      <line x1="8" y1="21" x2="16" y2="21"></line>
+                      <line x1="12" y1="17" x2="12" y2="21"></line>
+                    </svg>
+                    <span class="text-slate-300">Laptop not starting</span>
+                  </div>
+                  <div class="mt-2 text-sm text-slate-400">
+                    Status: <span class="text-cyan-400">Resolved</span>
+                  </div>
+                </div>
+                <div class="bg-slate-700 rounded p-4">
+                  <div class="flex items-center">
+                    <svg xmlns="http://www.w3.org/2000/svg" width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" class="text-cyan-400 mr-3">
+                      <rect x="5" y="2" width="14" height="20" rx="2" ry="2"></rect>
+                      <line x1="12" y1="18" x2="12.01" y2="18"></line>
+                    </svg>
+                    <span class="text-slate-300">Screen replacement</span>
+                  </div>
+                  <div class="mt-2 text-sm text-slate-400">
+                    Status: <span class="text-yellow-400">In Progress</span>
+                  </div>
+                </div>
+              </div>
+            </div>
+            <div class="absolute -bottom-4 -right-4 w-24 h-24 bg-cyan-500 rounded-full opacity-20 blur-xl"></div>
+            <div class="absolute -top-4 -left-4 w-32 h-32 bg-purple-500 rounded-full opacity-20 blur-xl"></div>
+          </div>
+        </div>
+      </div>
+    </div>
+  </div>
+
+  <!-- Features section -->
+  <div class="bg-slate-800 py-16 px-6">
+    <div class="container mx-auto max-w-6xl">
+      <h2 class="text-3xl font-bold text-center text-white mb-12">Our Services</h2>
+      
+      <div class="grid md:grid-cols-3 gap-8">
+        <div class="bg-slate-900 rounded-lg p-6 border border-slate-700 transition-transform duration-300 hover:-translate-y-2">
+          <div class="w-12 h-12 bg-cyan-900 rounded-lg flex items-center justify-center mb-4">
+            <svg xmlns="http://www.w3.org/2000/svg" width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" class="text-cyan-400">
+              <path d="M18 3a3 3 0 0 0-3 3v12a3 3 0 0 0 3 3 3 3 0 0 0 3-3 3 3 0 0 0-3-3H6a3 3 0 0 0-3 3 3 3 0 0 0 3 3 3 3 0 0 0 3-3V6a3 3 0 0 0-3-3 3 3 0 0 0-3 3 3 3 0 0 0 3 3h12a3 3 0 0 0 3-3 3 3 0 0 0-3-3z"></path>
+            </svg>
+          </div>
+          <h3 class="text-xl font-semibold text-white mb-2">IT Support</h3>
+          <p class="text-slate-400">
+            Get expert help for all your IT issues, from hardware problems to software troubleshooting. Our team is ready to assist you.
+          </p>
+        </div>
+        
+        <div class="bg-slate-900 rounded-lg p-6 border border-slate-700 transition-transform duration-300 hover:-translate-y-2">
+          <div class="w-12 h-12 bg-cyan-900 rounded-lg flex items-center justify-center mb-4">
+            <svg xmlns="http://www.w3.org/2000/svg" width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" class="text-cyan-400">
+              <path d="M2 3h6a4 4 0 0 1 4 4v14a3 3 0 0 0-3-3H2z"></path>
+              <path d="M22 3h-6a4 4 0 0 0-4 4v14a3 3 0 0 1 3-3h7z"></path>
+            </svg>
+          </div>
+          <h3 class="text-xl font-semibold text-white mb-2">Knowledge Base</h3>
+          <p class="text-slate-400">
+            Access our comprehensive collection of guides, tutorials, and solutions to common IT problems at any time.
+          </p>
+        </div>
+        
+        <div class="bg-slate-900 rounded-lg p-6 border border-slate-700 transition-transform duration-300 hover:-translate-y-2">
+          <div class="w-12 h-12 bg-cyan-900 rounded-lg flex items-center justify-center mb-4">
+            <svg xmlns="http://www.w3.org/2000/svg" width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" class="text-cyan-400">
+              <rect x="2" y="7" width="20" height="14" rx="2" ry="2"></rect>
+              <path d="M16 21V5a2 2 0 0 0-2-2h-4a2 2 0 0 0-2 2v16"></path>
+            </svg>
+          </div>
+          <h3 class="text-xl font-semibold text-white mb-2">Inventory Management</h3>
+          <p class="text-slate-400">
+            Keep track of your IT assets and equipment with our intuitive inventory management system.
+          </p>
+        </div>
+      </div>
+    </div>
+  </div>
+
+  <!-- Knowledge Base Preview Section -->
+  <div class="bg-slate-900 py-16 px-6">
+    <div class="container mx-auto max-w-6xl">
+      <h2 class="text-3xl font-bold text-center text-white mb-12">Knowledge Base Preview</h2>
+      <div class="grid md:grid-cols-2 gap-8">
+        <!-- Business Articles -->
+        <div>
+          <h3 class="text-xl font-semibold text-cyan-400 mb-4">For Businesses</h3>
+          <% (businessArticles || [
+            { title: 'Setting Up Secure Networks', description: 'Best practices for securing your business network and protecting sensitive data.' },
+            { title: 'Managing IT Assets', description: 'How to efficiently track and manage company devices and software.' }
+          ]).forEach(function(article) { %>
+            <div class="bg-slate-800 rounded-lg p-4 mb-4">
+              <div class="text-lg font-bold text-white"><%= article.title %></div>
+              <div class="text-slate-400 mb-2"><%= article.description %></div>
+              <a href="/login" class="text-cyan-400 hover:underline">Read More</a>
+            </div>
+          <% }) %>
+        </div>
+        <!-- Individual Articles -->
+        <div>
+          <h3 class="text-xl font-semibold text-cyan-400 mb-4">For Individuals</h3>
+          <% (individualArticles || [
+            { title: 'Troubleshooting Slow Computers', description: 'Simple steps to speed up your personal computer and improve performance.' },
+            { title: 'Protecting Your Personal Data', description: 'Tips for keeping your personal information safe online.' }
+          ]).forEach(function(article) { %>
+            <div class="bg-slate-800 rounded-lg p-4 mb-4">
+              <div class="text-lg font-bold text-white"><%= article.title %></div>
+              <div class="text-slate-400 mb-2"><%= article.description %></div>
+              <a href="/login" class="text-cyan-400 hover:underline">Read More</a>
+            </div>
+          <% }) %>
+        </div>
+      </div>
+    </div>
+  </div>
+
+  <!-- CTA section -->
+  <div class="bg-slate-900 py-16 px-6">
+    <div class="container mx-auto max-w-4xl">
+      <div class="bg-gradient-to-r from-slate-800 to-slate-700 rounded-lg shadow-xl p-8 relative overflow-hidden">
+        <div class="absolute top-0 right-0 w-64 h-64 bg-cyan-500 rounded-full opacity-10 -mr-20 -mt-20"></div>
+        
+        <div class="relative z-10">
+          <h2 class="text-2xl md:text-3xl font-bold text-white mb-4">Ready to get started?</h2>
+          <p class="text-slate-300 mb-6">
+            Join Dern-Support today and experience hassle-free IT support for your business or personal needs.
+          </p>
+          <div class="flex flex-col sm:flex-row space-y-4 sm:space-y-0 sm:space-x-4">
+            <a href="/register" class="inline-block bg-cyan-600 hover:bg-cyan-700 text-white font-medium py-3 px-6 rounded-md transition duration-200 text-center">
+              Create an Account
+            </a>
+            <a href="/login" class="inline-block bg-slate-600 hover:bg-slate-700 text-white font-medium py-3 px-6 rounded-md transition duration-200 text-center">
+              Login
+            </a>
+          </div>
+        </div>
+      </div>
+    </div>
+  </div>
+</div>

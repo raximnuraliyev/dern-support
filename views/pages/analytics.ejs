@@ -1,0 +1,235 @@
+<% /* views/pages/analytics.ejs - Analytics Dashboard */ %>
+    <% /* Prepare chart data in EJS variables for safe output */ var monthlyLabels=[], monthlyCounts=[], dailyLabels=[],
+        dailyCounts=[], issueLabels=[], issueCounts=[], locationLabels=[], locationCounts=[], spareLabels=[],
+        spareCounts=[]; var avgCompletionTime=typeof avgCompletionTime !=='undefined' ? avgCompletionTime : 0; var
+        satisfactionData=typeof satisfactionData !=='undefined' ? satisfactionData : [0,0]; if (typeof monthlyData
+        !=='undefined' ) { for (var i=0; i < monthlyData.length; i++) { monthlyLabels.push(monthlyData[i]._id.month
+        + '/' + monthlyData[i]._id.year); monthlyCounts.push(monthlyData[i].count); } } if (typeof dailyData
+        !=='undefined' ) { for (var i=0; i < dailyData.length; i++) { dailyLabels.push(dailyData[i]._id.day + '/' +
+        dailyData[i]._id.month); dailyCounts.push(dailyData[i].count); } } if (typeof issueData !=='undefined' ) { for
+        (var i=0; i < issueData.length; i++) { issueLabels.push(issueData[i]._id || 'Other' );
+        issueCounts.push(issueData[i].count); } } if (typeof locationData !=='undefined' ) { for (var i=0; i <
+        locationData.length; i++) { locationLabels.push(locationData[i]._id || 'Unknown' );
+        locationCounts.push(locationData[i].count); } } if (typeof sparePartsData !=='undefined' ) { for (var i=0; i <
+        sparePartsData.length; i++) { spareLabels.push(sparePartsData[i]._id || 'Unknown' );
+        spareCounts.push(sparePartsData[i].count); } } %>
+        <div class="max-w-5xl mx-auto">
+            <div class="grid grid-cols-1 md:grid-cols-4 gap-6 mb-8">
+                <div class="bg-slate-800 rounded-lg p-6 text-center">
+                    <div class="text-2xl font-bold text-cyan-400">
+                        <%= totalRequests %>
+                    </div>
+                    <div class="text-slate-300 mt-2">Total Support Requests</div>
+                </div>
+                <div class="bg-slate-800 rounded-lg p-6 text-center">
+                    <div class="text-2xl font-bold text-yellow-400">
+                        <%= statusCounts[0] %>
+                    </div>
+                    <div class="text-slate-300 mt-2">Pending</div>
+                </div>
+                <div class="bg-slate-800 rounded-lg p-6 text-center">
+                    <div class="text-2xl font-bold text-blue-400">
+                        <%= statusCounts[1] %>
+                    </div>
+                    <div class="text-slate-300 mt-2">In Progress</div>
+                </div>
+                <div class="bg-slate-800 rounded-lg p-6 text-center">
+                    <div class="text-2xl font-bold text-green-400">
+                        <%= statusCounts[2] %>
+                    </div>
+                    <div class="text-slate-300 mt-2">Resolved</div>
+                </div>
+            </div>
+
+            <div class="grid grid-cols-1 md:grid-cols-2 gap-8 mb-8">
+                <div class="bg-slate-800 rounded-lg p-6 text-center">
+                    <h2 class="text-lg font-semibold mb-4 text-cyan-300">Top Locations</h2>
+                    <canvas id="locationChart" height="180"></canvas>
+                </div>
+                <div class="bg-slate-800 rounded-lg p-6 text-center">
+                    <h2 class="text-lg font-semibold mb-4 text-cyan-300">Spare Parts Usage</h2>
+                    <canvas id="sparePartsChart" height="180"></canvas>
+                </div>
+            </div>
+
+            <div class="grid grid-cols-1 md:grid-cols-2 gap-8 mb-8">
+                <div class="bg-slate-800 rounded-lg p-6 text-center">
+                    <h2 class="text-lg font-semibold mb-4 text-cyan-300">Common Issues</h2>
+                    <canvas id="issuesChart" height="180"></canvas>
+                </div>
+                <div class="bg-slate-800 rounded-lg p-6">
+                    <h2 class="text-lg font-semibold mb-4 text-cyan-300">Monthly Requests (Last 6 Months)</h2>
+                    <canvas id="monthlyChart" height="180"></canvas>
+                </div>
+            </div>
+
+            <div class="bg-slate-800 rounded-lg p-6 mt-8 max-w-md mx-auto">
+                <h2 class="text-lg font-semibold mb-4 text-cyan-300">Status Distribution</h2>
+                <canvas id="statusChart" height="80"></canvas>
+            </div>
+        </div>
+
+        <script src="https://cdn.jsdelivr.net/npm/chart.js"></script>
+        <script>
+            // Use EJS-rendered variables for chart data
+            var monthlyLabels = JSON.parse('<%- JSON.stringify(monthlyLabels) %>');
+            var monthlyCounts = JSON.parse('<%- JSON.stringify(monthlyCounts) %>');
+            var statusCounts = JSON.parse('<%- JSON.stringify(statusCounts) %>');
+            var issueLabels = JSON.parse('<%- JSON.stringify(issueLabels) %>');
+            var issueCounts = JSON.parse('<%- JSON.stringify(issueCounts) %>');
+            var locationLabels = JSON.parse('<%- JSON.stringify(locationLabels) %>');
+            var locationCounts = JSON.parse('<%- JSON.stringify(locationCounts) %>');
+            var spareLabels = JSON.parse('<%- JSON.stringify(spareLabels) %>');
+            var spareCounts = JSON.parse('<%- JSON.stringify(spareCounts) %>');
+            var dailyLabels = JSON.parse('<%- JSON.stringify(dailyLabels) %>');
+            var dailyCounts = JSON.parse('<%- JSON.stringify(dailyCounts) %>');
+            var satisfactionData = JSON.parse('<%- JSON.stringify(satisfactionData) %>');
+
+            // Monthly Requests Chart
+            new Chart(document.getElementById('monthlyChart'), {
+                type: 'line',
+                data: {
+                    labels: monthlyLabels,
+                    datasets: [{
+                        label: 'Requests',
+                        data: monthlyCounts,
+                        borderColor: '#06b6d4',
+                        backgroundColor: 'rgba(6,182,212,0.2)',
+                        fill: true,
+                        tension: 0.3
+                    }]
+                },
+                options: {
+                    plugins: { legend: { display: false } },
+                    scales: { y: { beginAtZero: true } }
+                }
+            });
+
+            // Status Distribution Chart
+            new Chart(document.getElementById('statusChart'), {
+                type: 'doughnut',
+                data: {
+                    labels: ['Pending', 'In Progress', 'Resolved', 'Cancelled'],
+                    datasets: [{
+                        data: statusCounts,
+                        backgroundColor: ['#facc15', '#38bdf8', '#22d3ee', '#64748b']
+                    }]
+                },
+                options: {
+                    plugins: { legend: { position: 'bottom' } }
+                }
+            });
+
+            // Enhanced Common Issues Bar Chart
+            new Chart(document.getElementById('issuesChart'), {
+                type: 'bar',
+                data: {
+                    labels: issueLabels,
+                    datasets: [{
+                        label: 'Number of Requests',
+                        data: issueCounts,
+                        backgroundColor: issueLabels.map((_, index) => {
+                            const colors = ['#38bdf8', '#22d3ee', '#facc15', '#64748b', '#06b6d4'];
+                            return colors[index % colors.length];
+                        }),
+                        borderColor: '#1e293b',
+                        borderWidth: 1
+                    }]
+                },
+                options: {
+                    plugins: {
+                        legend: { display: true, position: 'top' },
+                        tooltip: {
+                            callbacks: {
+                                label: function(context) {
+                                    return `${context.label}: ${context.raw} requests`;
+                                }
+                            }
+                        }
+                    },
+                    indexAxis: 'y',
+                    scales: {
+                        x: { beginAtZero: true, grid: { color: '#334155' } },
+                        y: { grid: { color: '#334155' } }
+                    }
+                }
+            });
+
+            // Jobs by Location Bar Chart
+            new Chart(document.getElementById('locationChart'), {
+                type: 'bar',
+                data: {
+                    labels: locationLabels,
+                    datasets: [{
+                        label: 'Jobs',
+                        data: locationCounts,
+                        backgroundColor: '#facc15'
+                    }]
+                },
+                options: { plugins: { legend: { display: false } }, indexAxis: 'y', scales: { x: { beginAtZero: true } } }
+            });
+
+            // Spare Parts Usage Bar Chart
+            new Chart(document.getElementById('sparePartsChart'), {
+                type: 'bar',
+                data: {
+                    labels: spareLabels,
+                    datasets: [{
+                        label: 'Usage',
+                        data: spareCounts,
+                        backgroundColor: '#22d3ee'
+                    }]
+                },
+                options: { plugins: { legend: { display: false } }, indexAxis: 'y', scales: { x: { beginAtZero: true } } }
+            });
+
+            // Daily Job Count Line Chart
+            if (dailyLabels.length && dailyCounts.length) {
+                new Chart(document.getElementById('dailyJobChart'), {
+                    type: 'line',
+                    data: {
+                        labels: dailyLabels,
+                        datasets: [{
+                            label: 'Jobs',
+                            data: dailyCounts,
+                            borderColor: '#06b6d4',
+                            backgroundColor: 'rgba(6,182,212,0.2)',
+                            fill: true,
+                            tension: 0.3
+                        }]
+                    },
+                    options: { plugins: { legend: { display: false } }, scales: { y: { beginAtZero: true } } }
+                });
+            } else {
+                document.getElementById('dailyJobChart').parentElement.innerHTML += '<div class="text-slate-400 mt-4">No data available</div>';
+            }
+
+            // Debugging output for satisfactionData
+            var satisfactionData = JSON.parse('<%- JSON.stringify(satisfactionData) %>');
+            console.log('Satisfaction Data:', satisfactionData);
+
+            // Ensure the canvas element exists
+            var satisfactionCanvas = document.getElementById('satisfactionChart');
+            if (!satisfactionCanvas) {
+                console.error('Canvas element for Customer Satisfaction chart not found.');
+            } else {
+                console.log('Canvas element found:', satisfactionCanvas);
+
+                // Customer Satisfaction Pie Chart
+                if (satisfactionData && satisfactionData.length > 0) {
+                    new Chart(satisfactionCanvas, {
+                        type: 'pie',
+                        data: {
+                            labels: ['Satisfied', 'Unsatisfied'],
+                            datasets: [{
+                                data: satisfactionData,
+                                backgroundColor: ['#22d3ee', '#64748b']
+                            }]
+                        },
+                        options: { plugins: { legend: { position: 'bottom' } } }
+                    });
+                } else {
+                    satisfactionCanvas.parentElement.innerHTML += '<div class="text-slate-400 mt-4">No data available</div>';
+                }
+            }
+        </script>

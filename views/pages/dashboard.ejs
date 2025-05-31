@@ -1,0 +1,147 @@
+<div class="grid grid-cols-1 md:grid-cols-3 gap-6">
+  <!-- Welcome card -->
+  <div class="bg-slate-800 rounded-lg shadow p-6 md:col-span-3">
+    <h2 class="text-xl font-semibold mb-2">Welcome back, <%= locals.user.name %>!</h2>
+    <p class="text-slate-400">What can we help you with today?</p>
+  </div>
+  
+  <!-- Support Requests -->
+  <div class="bg-slate-800 rounded-lg shadow p-6 md:col-span-2">
+    <div class="flex items-center justify-between mb-4">
+      <h2 class="text-xl font-semibold">Recent Support Requests</h2>
+      <a href="/support/new" class="text-sm bg-cyan-600 hover:bg-cyan-700 text-white font-medium py-2 px-4 rounded transition duration-200">
+        New Request
+      </a>
+    </div>
+    
+    <% if (supportRequests && supportRequests.length > 0) { %>
+      <div class="overflow-x-auto">
+        <table class="w-full">
+          <thead class="border-b border-slate-700">
+            <tr>
+              <th class="text-left py-3 px-4 text-sm font-medium text-slate-400">Device</th>
+              <th class="text-left py-3 px-4 text-sm font-medium text-slate-400">Description</th>
+              <th class="text-left py-3 px-4 text-sm font-medium text-slate-400">Status</th>
+              <th class="text-left py-3 px-4 text-sm font-medium text-slate-400">Date</th>
+            </tr>
+          </thead>
+          <tbody>
+            <% supportRequests.forEach(request => { %>
+              <tr class="border-b border-slate-700 hover:bg-slate-700/30">
+                <td class="py-3 px-4"><%= request.deviceType %></td>
+                <td class="py-3 px-4"><%= request.description.length > 30 ? request.description.substring(0, 30) + '...' : request.description %></td>
+                <td class="py-3 px-4">
+                  <span class="
+                    <%= request.status === 'Pending' ? 'status-pending' : 
+                       request.status === 'In Progress' ? 'status-in-progress' : 
+                       request.status === 'Resolved' ? 'status-resolved' : 
+                       'status-cancelled' %>
+                  ">
+                    <%= request.status %>
+                  </span>
+                </td>
+                <td class="py-3 px-4"><%= new Date(request.createdAt).toLocaleDateString() %></td>
+              </tr>
+            <% }); %>
+          </tbody>
+        </table>
+      </div>
+      <div class="mt-4 text-right">
+        <a href="/support/history" class="text-cyan-400 hover:text-cyan-300 text-sm">View all requests →</a>
+      </div>
+    <% } else { %>
+      <div class="bg-slate-700/30 rounded-lg p-6 text-center">
+        <p class="text-slate-400 mb-4">You don't have any support requests yet.</p>
+        <a href="/support/new" class="inline-block bg-cyan-600 hover:bg-cyan-700 text-white font-medium py-2 px-4 rounded transition duration-200">
+          Create Your First Request
+        </a>
+      </div>
+    <% } %>
+  </div>
+  
+  <!-- Quick links -->
+  <div class="bg-slate-800 rounded-lg shadow p-6">
+    <h2 class="text-xl font-semibold mb-4">Quick Links</h2>
+    
+    <div class="space-y-4">
+      <a href="/support/new" class="block bg-slate-700 hover:bg-slate-600 rounded-lg p-4 transition duration-200">
+        <div class="flex items-center">
+          <div class="bg-slate-600 rounded-full p-2 mr-3">
+            <svg xmlns="http://www.w3.org/2000/svg" width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" class="text-cyan-400">
+              <path d="M18 3a3 3 0 0 0-3 3v12a3 3 0 0 0 3 3 3 3 0 0 0 3-3 3 3 0 0 0-3-3H6a3 3 0 0 0-3 3 3 3 0 0 0 3 3 3 3 0 0 0 3-3V6a3 3 0 0 0-3-3 3 3 0 0 0-3 3 3 3 0 0 0 3 3h12a3 3 0 0 0 3-3 3 3 0 0 0-3-3z"></path>
+            </svg>
+          </div>
+          <div>
+            <h3 class="font-medium">Request Support</h3>
+            <p class="text-sm text-slate-400">Get help with your IT issue</p>
+          </div>
+        </div>
+      </a>
+      
+      <a href="/knowledge" class="block bg-slate-700 hover:bg-slate-600 rounded-lg p-4 transition duration-200">
+        <div class="flex items-center">
+          <div class="bg-slate-600 rounded-full p-2 mr-3">
+            <svg xmlns="http://www.w3.org/2000/svg" width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" class="text-cyan-400">
+              <path d="M2 3h6a4 4 0 0 1 4 4v14a3 3 0 0 0-3-3H2z"></path>
+              <path d="M22 3h-6a4 4 0 0 0-4 4v14a3 3 0 0 1 3-3h7z"></path>
+            </svg>
+          </div>
+          <div>
+            <h3 class="font-medium">Knowledge Base</h3>
+            <p class="text-sm text-slate-400">Browse guides and solutions</p>
+          </div>
+        </div>
+      </a>
+      
+      <a href="/inventory" class="block bg-slate-700 hover:bg-slate-600 rounded-lg p-4 transition duration-200">
+        <div class="flex items-center">
+          <div class="bg-slate-600 rounded-full p-2 mr-3">
+            <svg xmlns="http://www.w3.org/2000/svg" width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" class="text-cyan-400">
+              <rect x="2" y="7" width="20" height="14" rx="2" ry="2"></rect>
+              <path d="M16 21V5a2 2 0 0 0-2-2h-4a2 2 0 0 0-2 2v16"></path>
+            </svg>
+          </div>
+          <div>
+            <h3 class="font-medium">Inventory</h3>
+            <p class="text-sm text-slate-400">View available IT equipment</p>
+          </div>
+        </div>
+      </a>
+    </div>
+  </div>
+  
+  <!-- Knowledge Articles -->
+  <div class="bg-slate-800 rounded-lg shadow p-6 md:col-span-2">
+    <div class="flex items-center justify-between mb-4">
+      <h2 class="text-xl font-semibold">Popular Articles</h2>
+      <a href="/knowledge" class="text-cyan-400 hover:text-cyan-300 text-sm">View all →</a>
+    </div>
+    
+    <% if (knowledgeArticles && knowledgeArticles.length > 0) { %>
+      <div class="space-y-4">
+        <% knowledgeArticles.forEach(article => { %>
+          <a href="/knowledge/article/<%= article._id %>" class="block bg-slate-700/30 hover:bg-slate-700/50 rounded-lg p-4 transition duration-200">
+            <h3 class="font-medium mb-1"><%= article.title %></h3>
+            <div class="flex items-center text-sm text-slate-400">
+              <span class="bg-slate-600 text-xs px-2 py-1 rounded mr-3"><%= article.category %></span>
+              <span><%= article.viewCount %> views</span>
+            </div>
+          </a>
+        <% }); %>
+      </div>
+    <% } else { %>
+      <div class="bg-slate-700/30 rounded-lg p-6 text-center">
+        <p class="text-slate-400">No knowledge articles available yet.</p>
+      </div>
+    <% } %>
+  </div>
+  
+  <!-- Feedback -->
+  <div class="bg-slate-800 rounded-lg shadow p-6">
+    <h2 class="text-xl font-semibold mb-4">Feedback</h2>
+    <p class="text-slate-400 mb-4">Help us improve our service by providing your feedback.</p>
+    <a href="/feedback" class="block text-center bg-cyan-600 hover:bg-cyan-700 text-white font-medium py-2 px-4 rounded transition duration-200">
+      Submit Feedback
+    </a>
+  </div>
+</div>

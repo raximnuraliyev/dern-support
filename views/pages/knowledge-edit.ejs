@@ -1,0 +1,33 @@
+<div class="max-w-2xl mx-auto bg-slate-800 rounded-lg shadow-lg p-8 mt-8">
+  <h1 class="text-2xl font-bold mb-6 text-cyan-400">Edit Knowledge Article</h1>
+  <form action="/knowledge/edit/<%= article._id %>" method="POST" class="space-y-6">
+    <div>
+      <label for="title" class="block text-slate-300 mb-1">Title<span class="text-red-500">*</span></label>
+      <input type="text" id="title" name="title" value="<%= article.title %>" required class="w-full px-4 py-2 bg-slate-700 border border-slate-600 rounded-md focus:ring-2 focus:ring-cyan-500 focus:border-transparent">
+    </div>
+    <div>
+      <label for="category" class="block text-slate-300 mb-1">Category<span class="text-red-500">*</span></label>
+      <select id="category" name="category" required class="w-full px-4 py-2 bg-slate-700 border border-slate-600 rounded-md focus:ring-2 focus:ring-cyan-500 focus:border-transparent">
+        <option value="">Select a category</option>
+        <option value="Hardware" <%= article.category === 'Hardware' ? 'selected' : '' %>>Hardware</option>
+        <option value="Software" <%= article.category === 'Software' ? 'selected' : '' %>>Software</option>
+        <option value="Network" <%= article.category === 'Network' ? 'selected' : '' %>>Network</option>
+        <option value="Security" <%= article.category === 'Security' ? 'selected' : '' %>>Security</option>
+        <option value="Troubleshooting" <%= article.category === 'Troubleshooting' ? 'selected' : '' %>>Troubleshooting</option>
+        <option value="Other" <%= article.category === 'Other' ? 'selected' : '' %>>Other</option>
+      </select>
+    </div>
+    <div>
+      <label for="content" class="block text-slate-300 mb-1">Content<span class="text-red-500">*</span></label>
+      <textarea id="content" name="content" rows="8" required class="w-full px-4 py-2 bg-slate-700 border border-slate-600 rounded-md focus:ring-2 focus:ring-cyan-500 focus:border-transparent"><%= article.content %></textarea>
+    </div>
+    <div>
+      <label for="tags" class="block text-slate-300 mb-1">Tags <span class="text-slate-400 text-xs">(comma separated)</span></label>
+      <input type="text" id="tags" name="tags" value="<%= article.tags ? article.tags.join(', ') : '' %>" class="w-full px-4 py-2 bg-slate-700 border border-slate-600 rounded-md focus:ring-2 focus:ring-cyan-500 focus:border-transparent">
+    </div>
+    <div class="flex justify-between items-center mt-8">
+      <a href="/knowledge/article/<%= article._id %>" class="text-cyan-400 hover:text-cyan-300">Cancel</a>
+      <button type="submit" class="bg-cyan-600 hover:bg-cyan-700 text-white px-6 py-2 rounded-md transition duration-200">Save Changes</button>
+    </div>
+  </form>
+</div>

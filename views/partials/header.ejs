@@ -1,0 +1,58 @@
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title><%= title %> | Dern-Support</title>
+<link rel="icon" type="image/svg+xml" href="/images/favicon.svg">
+<!-- Tailwind CSS via CDN -->
+<script src="https://cdn.tailwindcss.com"></script>
+<script>
+  tailwind.config = {
+    theme: {
+      extend: {
+        colors: {
+          cyan: {
+            400: '#22D3EE',
+            500: '#06B6D4',
+            600: '#0891B2',
+            700: '#0E7490',
+          },
+          slate: {
+            800: '#1E293B',
+            900: '#0F172A',
+          }
+        },
+      },
+    },
+  };
+</script>
+<!-- Chart.js for analytics -->
+<script src="https://cdn.jsdelivr.net/npm/chart.js"></script>
+<!-- Custom styles -->
+<style>
+  body {
+    font-family: 'Inter', 'Segoe UI', system-ui, sans-serif;
+  }
+  
+  .alert {
+    padding: 0.75rem 1.25rem;
+    margin-bottom: 1rem;
+    border-radius: 0.25rem;
+  }
+  
+  .alert.success {
+    background-color: rgba(16, 185, 129, 0.1);
+    border: 1px solid rgba(16, 185, 129, 0.2);
+    color: #10B981;
+  }
+  
+  .alert.error {
+    background-color: rgba(239, 68, 68, 0.1);
+    border: 1px solid rgba(239, 68, 68, 0.2);
+    color: #EF4444;
+  }
+  
+  /* Status colors */
+  .status-pending { color: #F59E0B; }
+  .status-in-progress { color: #3B82F6; }
+  .status-resolved { color: #10B981; }
+  .status-cancelled { color: #6B7280; }
+</style>

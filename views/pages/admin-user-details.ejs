@@ -1,0 +1,228 @@
+<div class="grid grid-cols-1 md:grid-cols-3 gap-6">
+  <!-- User Information -->
+  <div class="bg-slate-800 rounded-lg shadow-lg p-6 md:col-span-2">
+    <div class="flex justify-between items-start mb-6">
+      <h2 class="text-2xl font-semibold">User Information</h2>
+      <div class="flex gap-2">
+        <button onclick="toggleEditMode()" class="bg-cyan-600 hover:bg-cyan-700 text-white px-4 py-2 rounded-md">
+          Edit User
+        </button>
+        <button onclick="confirmDelete('<%= user._id %>')" class="bg-red-600 hover:bg-red-700 text-white px-4 py-2 rounded-md">
+          Delete User
+        </button>
+      </div>
+    </div>
+
+    <!-- View Mode -->
+    <div id="viewMode">
+      <div class="grid grid-cols-2 gap-6">
+        <div>
+          <p class="text-slate-400 mb-1">Name</p>
+          <p class="text-lg"><%= user.name %></p>
+        </div>
+        <div>
+          <p class="text-slate-400 mb-1">Email</p>
+          <p class="text-lg"><%= user.email %></p>
+        </div>
+        <div>
+          <p class="text-slate-400 mb-1">Account Type</p>
+          <p class="text-lg"><%= user.accountType %></p>
+        </div>
+        <div>
+          <p class="text-slate-400 mb-1">Status</p>
+          <p class="text-lg">
+            <span class="px-2 py-1 rounded-full text-sm
+              <%= user.status === 'active' ? 'bg-green-500/20 text-green-400' :
+                 user.status === 'suspended' ? 'bg-yellow-500/20 text-yellow-400' :
+                 'bg-red-500/20 text-red-400' %>">
+              <%= user.status || 'active' %>
+            </span>
+          </p>
+        </div>
+        <div>
+          <p class="text-slate-400 mb-1">Registered</p>
+          <p class="text-lg"><%= new Date(user.createdAt).toLocaleDateString() %></p>
+        </div>
+        <div>
+          <p class="text-slate-400 mb-1">Last Login</p>
+          <p class="text-lg"><%= user.lastLogin ? new Date(user.lastLogin).toLocaleDateString() : 'Never' %></p>
+        </div>
+      </div>
+    </div>
+
+    <!-- Edit Mode -->
+    <form id="editMode" class="hidden" action="/admin/users/<%= user._id %>?_method=PUT" method="POST">
+      <div class="grid grid-cols-2 gap-6">
+        <div>
+          <label class="block text-slate-400 mb-1">Name</label>
+          <input type="text" name="name" value="<%= user.name %>" class="w-full px-4 py-2 bg-slate-700 border border-slate-600 rounded-md">
+        </div>
+        <div>
+          <label class="block text-slate-400 mb-1">Email</label>
+          <input type="email" name="email" value="<%= user.email %>" class="w-full px-4 py-2 bg-slate-700 border border-slate-600 rounded-md">
+        </div>
+        <div>
+          <label class="block text-slate-400 mb-1">Account Type</label>
+          <select name="accountType" class="w-full px-4 py-2 bg-slate-700 border border-slate-600 rounded-md">
+            <option value="Individual" <%= user.accountType === 'Individual' ? 'selected' : '' %>>Individual</option>
+            <option value="Business" <%= user.accountType === 'Business' ? 'selected' : '' %>>Business</option>
+            <option value="Admin" <%= user.accountType === 'Admin' ? 'selected' : '' %>>Admin</option>
+          </select>
+        </div>
+        <div>
+          <label class="block text-slate-400 mb-1">Status</label>
+          <select name="status" class="w-full px-4 py-2 bg-slate-700 border border-slate-600 rounded-md">
+            <option value="active" <%= user.status === 'active' ? 'selected' : '' %>>Active</option>
+            <option value="suspended" <%= user.status === 'suspended' ? 'selected' : '' %>>Suspended</option>
+            <option value="banned" <%= user.status === 'banned' ? 'selected' : '' %>>Banned</option>
+          </select>
+        </div>
+      </div>
+      <div class="mt-6 flex justify-end gap-4">
+        <button type="button" onclick="toggleEditMode()" class="bg-slate-700 hover:bg-slate-600 text-white px-4 py-2 rounded-md">
+          Cancel
+        </button>
+        <button type="submit" class="bg-cyan-600 hover:bg-cyan-700 text-white px-4 py-2 rounded-md">
+          Save Changes
+        </button>
+      </div>
+    </form>
+  </div>
+
+  <!-- Quick Actions -->
+  <div class="bg-slate-800 rounded-lg shadow-lg p-6">
+    <h2 class="text-xl font-semibold mb-4">Quick Actions</h2>
+    <div class="space-y-4">
+      <button onclick="resetPassword('<%= user._id %>')" class="w-full bg-slate-700 hover:bg-slate-600 text-white px-4 py-3 rounded-md text-left flex items-center">
+        <svg xmlns="http://www.w3.org/2000/svg" width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" class="mr-3">
+          <rect x="3" y="11" width="18" height="11" rx="2" ry="2"></rect>
+          <path d="M7 11V7a5 5 0 0 1 10 0v4"></path>
+        </svg>
+        Reset Password
+      </button>
+      
+      <button onclick="toggleStatus('<%= user._id %>', '<%= user.status %>')" class="w-full bg-slate-700 hover:bg-slate-600 text-white px-4 py-3 rounded-md text-left flex items-center">
+        <svg xmlns="http://www.w3.org/2000/svg" width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" class="mr-3">
+          <path d="M12 22s8-4 8-10V5l-8-3-8 3v7c0 6 8 10 8 10z"></path>
+        </svg>
+        <%= user.status === 'active' ? 'Suspend Account' : 'Activate Account' %>
+      </button>
+      
+      <button onclick="impersonateUser('<%= user._id %>')" class="w-full bg-slate-700 hover:bg-slate-600 text-white px-4 py-3 rounded-md text-left flex items-center">
+        <svg xmlns="http://www.w3.org/2000/svg" width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" class="mr-3">
+          <path d="M20 21v-2a4 4 0 0 0-4-4H8a4 4 0 0 0-4 4v2"></path>
+          <circle cx="12" cy="7" r="4"></circle>
+        </svg>
+        Impersonate User
+      </button>
+    </div>
+  </div>
+
+  <!-- Support History -->
+  <div class="bg-slate-800 rounded-lg shadow-lg p-6 md:col-span-3">
+    <h2 class="text-xl font-semibold mb-4">Support History</h2>
+    <% if (supportRequests && supportRequests.length > 0) { %>
+      <div class="overflow-x-auto">
+        <table class="w-full">
+          <thead class="bg-slate-700">
+            <tr>
+              <th class="px-4 py-3 text-left">Ticket ID</th>
+              <th class="px-4 py-3 text-left">Device Type</th>
+              <th class="px-4 py-3 text-left">Issue</th>
+              <th class="px-4 py-3 text-left">Status</th>
+              <th class="px-4 py-3 text-left">Created</th>
+              <th class="px-4 py-3 text-left">Actions</th>
+            </tr>
+          </thead>
+          <tbody>
+            <% supportRequests.forEach(request => { %>
+              <tr class="border-b border-slate-700 hover:bg-slate-700/50">
+                <td class="px-4 py-3">#<%= request._id.toString().slice(-6) %></td>
+                <td class="px-4 py-3"><%= request.deviceType %></td>
+                <td class="px-4 py-3"><%= request.description.substring(0, 50) %>...</td>
+                <td class="px-4 py-3">
+                  <span class="px-2 py-1 rounded-full text-xs
+                    <%= request.status === 'Pending' ? 'bg-yellow-500/20 text-yellow-400' :
+                       request.status === 'In Progress' ? 'bg-blue-500/20 text-blue-400' :
+                       request.status === 'Resolved' ? 'bg-green-500/20 text-green-400' :
+                       'bg-red-500/20 text-red-400' %>">
+                    <%= request.status %>
+                  </span>
+                </td>
+                <td class="px-4 py-3"><%= new Date(request.createdAt).toLocaleDateString() %></td>
+                <td class="px-4 py-3">
+                  <a href="/support/<%= request._id %>" class="text-cyan-400 hover:text-cyan-300">View</a>
+                </td>
+              </tr>
+            <% }); %>
+          </tbody>
+        </table>
+      </div>
+    <% } else { %>
+      <div class="text-center py-8 text-slate-400">
+        No support requests found for this user.
+      </div>
+    <% } %>
+  </div>
+</div>
+
+<script>
+  function toggleEditMode() {
+    const viewMode = document.getElementById('viewMode');
+    const editMode = document.getElementById('editMode');
+    viewMode.classList.toggle('hidden');
+    editMode.classList.toggle('hidden');
+  }
+
+  function confirmDelete(userId) {
+    if (confirm('Are you sure you want to delete this user? This action cannot be undone.')) {
+      const form = document.createElement('form');
+      form.method = 'POST';
+      form.action = `/admin/users/${userId}?_method=DELETE`;
+      document.body.appendChild(form);
+      form.submit();
+    }
+  }
+
+  function resetPassword(userId) {
+    if (confirm('Are you sure you want to reset this user\'s password?')) {
+      const newPassword = prompt('Enter a new password for this user (min 6 chars):');
+      if (newPassword && newPassword.length >= 6) {
+        const form = document.createElement('form');
+        form.method = 'POST';
+        form.action = `/admin/users/${userId}/reset-password?_method=PUT`;
+        const input = document.createElement('input');
+        input.type = 'hidden';
+        input.name = 'password';
+        input.value = newPassword;
+        form.appendChild(input);
+        document.body.appendChild(form);
+        form.submit();
+      } else {
+        alert('Password must be at least 6 characters.');
+      }
+    }
+  }
+
+  function toggleStatus(userId, currentStatus) {
+    const newStatus = currentStatus === 'active' ? 'suspended' : 'active';
+    if (confirm(`Are you sure you want to ${currentStatus === 'active' ? 'suspend' : 'activate'} this account?`)) {
+      const form = document.createElement('form');
+      form.method = 'POST';
+      form.action = `/admin/users/${userId}/status?_method=PUT`;
+      const input = document.createElement('input');
+      input.type = 'hidden';
+      input.name = 'status';
+      input.value = newStatus;
+      form.appendChild(input);
+      document.body.appendChild(form);
+      form.submit();
+    }
+  }
+
+  function impersonateUser(userId) {
+    if (confirm('Are you sure you want to impersonate this user?')) {
+      window.location.href = `/admin/users/${userId}/impersonate`;
+    }
+  }
+</script>

@@ -1,0 +1,89 @@
+<!-- Shopping Cart Page -->
+<div class="max-w-3xl mx-auto bg-slate-800 rounded-lg shadow-lg p-8 mt-8">
+    <h2 class="text-2xl font-semibold mb-6 text-center">Your Cart</h2>
+    <% if (!cart || cart.length===0) { %>
+        <div class="text-center text-slate-400 py-12">Your cart is empty.</div>
+        <% } else { %>
+            <form action="/orders/new" method="POST">
+                <table class="min-w-full text-slate-300 mb-6">
+                    <thead>
+                        <tr>
+                            <th class="px-4 py-2 text-left">Image</th>
+                            <th class="px-4 py-2 text-left">Name</th>
+                            <th class="px-4 py-2 text-left">Price</th>
+                            <th class="px-4 py-2 text-left">Quantity</th>
+                            <th class="px-4 py-2 text-left">Subtotal</th>
+                            <th class="px-4 py-2"></th>
+                        </tr>
+                    </thead>
+                    <tbody>
+                        <% let total = 0; %>
+                        <% cart.forEach(item => { %>
+                            <% const subtotal = (item.price || 0) * (item.quantity || 1); total += subtotal; %>
+                            <tr class="border-b border-slate-700 hover:bg-slate-700/30 transition">
+                                <td class="px-4 py-2">
+                                    <img src="<%= item.imageUrl %>" alt="<%= item.name %>" class="w-12 h-12 object-cover rounded-md">
+                                </td>
+                                <td class="px-4 py-2 font-medium"><%= item.name %></td>
+                                <td class="px-4 py-2">$<%= (item.price || 0).toFixed(2) %></td>
+                                <td class="px-4 py-2">
+                                    <form action="/cart/update" method="POST" class="flex items-center gap-2" onsubmit="event.stopPropagation();">
+                                        <input type="hidden" name="itemId" value="<%= item.itemId %>">
+                                        <input type="number" name="quantity" min="1" max="<%= item.max %>" value="<%= item.quantity %>" class="w-16 px-2 py-1 bg-slate-700 border border-slate-600 rounded-md text-slate-200">
+                                        <button type="submit" class="text-cyan-400 hover:text-cyan-300">Update</button>
+                                    </form>
+                                </td>
+                                <td class="px-4 py-2">$<%= subtotal.toFixed(2) %></td>
+                                <td class="px-4 py-2">
+                                    <form action="/cart/remove" method="POST" onsubmit="event.stopPropagation();">
+                                        <input type="hidden" name="itemId" value="<%= item.itemId %>">
+                                        <button type="submit" class="text-red-400 hover:text-red-300">Remove</button>
+                                    </form>
+                                </td>
+                            </tr>
+                        <% }); %>
+                    </tbody>
+                </table>
+                <div class="flex justify-between items-center text-lg font-semibold mb-6">
+                    <span>Total Amount</span>
+                    <span>$<%= total.toFixed(2) %></span>
+                </div>
+                <!-- Shipping and (optional) business info fields -->
+                <div class="mb-4">
+                    <h3 class="text-lg font-semibold mb-2">Shipping Address</h3>
+                    <div class="grid grid-cols-1 md:grid-cols-2 gap-4">
+                        <input type="text" name="shippingAddress[street]" placeholder="Street" required
+                            class="px-4 py-2 bg-slate-700 border border-slate-600 rounded-md">
+                        <input type="text" name="shippingAddress[city]" placeholder="City" required
+                            class="px-4 py-2 bg-slate-700 border border-slate-600 rounded-md">
+                        <input type="text" name="shippingAddress[state]" placeholder="State" required
+                            class="px-4 py-2 bg-slate-700 border border-slate-600 rounded-md">
+                        <input type="text" name="shippingAddress[zipCode]" placeholder="Zip Code" required
+                            class="px-4 py-2 bg-slate-700 border border-slate-600 rounded-md">
+                        <input type="text" name="shippingAddress[country]" placeholder="Country" required
+                            class="px-4 py-2 bg-slate-700 border border-slate-600 rounded-md">
+                    </div>
+                </div>
+                <% if (locals.user && locals.user.accountType==='Business' ) { %>
+                    <div class="mb-4">
+                        <h3 class="text-lg font-semibold mb-2">Business Information</h3>
+                        <div class="grid grid-cols-1 md:grid-cols-2 gap-4">
+                            <input type="text" name="businessInfo[companyName]" placeholder="Company Name"
+                                class="px-4 py-2 bg-slate-700 border border-slate-600 rounded-md">
+                            <input type="text" name="businessInfo[department]" placeholder="Department"
+                                class="px-4 py-2 bg-slate-700 border border-slate-600 rounded-md">
+                            <input type="text" name="businessInfo[contactPerson]" placeholder="Contact Person"
+                                class="px-4 py-2 bg-slate-700 border border-slate-600 rounded-md">
+                            <input type="text" name="businessInfo[purchaseOrderNumber]" placeholder="PO Number"
+                                class="px-4 py-2 bg-slate-700 border border-slate-600 rounded-md">
+                        </div>
+                    </div>
+                    <% } %>
+                <div class="flex justify-end">
+                    <button type="submit"
+                        class="bg-green-600 hover:bg-green-700 text-white px-8 py-2 rounded-md font-semibold transition duration-200">Place
+                        Order</button>
+                </div>
+            </form>
+            <% } %>
+</div>

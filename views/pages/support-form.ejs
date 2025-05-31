@@ -1,0 +1,147 @@
+<div class="max-w-2xl mx-auto">
+  <div class="bg-slate-800 rounded-lg shadow-lg p-6">
+    <h2 class="text-2xl font-semibold mb-6">Submit Support Request</h2>
+    <form action="/support/new" method="POST" enctype="multipart/form-data">
+      <!-- Subject -->
+      <div class="mb-4">
+        <label for="subject" class="block text-sm font-medium text-slate-300 mb-1 flex items-center gap-1">
+          Subject <span class="ml-1 text-cyan-400" title="Required"><svg xmlns="http://www.w3.org/2000/svg" class="inline w-3 h-3" fill="currentColor" viewBox="0 0 16 16"><rect x="3" y="3" width="10" height="10" rx="2"/></svg></span>
+        </label>
+        <input type="text" id="subject" name="subject" required class="w-full px-4 py-2 bg-slate-700 border border-slate-600 rounded-md" placeholder="Short summary of your issue">
+      </div>
+      <!-- Category -->
+      <div class="mb-4">
+        <label for="category" class="block text-sm font-medium text-slate-300 mb-1 flex items-center gap-1">
+          Category <span class="ml-1 text-green-400" title="Required"><svg xmlns="http://www.w3.org/2000/svg" class="inline w-3 h-3" fill="currentColor" viewBox="0 0 16 16"><polygon points="8,2 14,14 2,14"/></svg></span>
+        </label>
+        <select id="category" name="category" required class="w-full px-4 py-2 bg-slate-700 border border-slate-600 rounded-md">
+          <option value="">Select category</option>
+          <option value="Hardware">Hardware</option>
+          <option value="Software">Software</option>
+          <option value="Network">Network</option>
+          <option value="Other">Other</option>
+        </select>
+      </div>
+      <!-- Description -->
+      <div class="mb-4">
+        <label for="description" class="block text-sm font-medium text-slate-300 mb-1 flex items-center gap-1">
+          Description <span class="ml-1 text-yellow-400" title="Required"><svg xmlns="http://www.w3.org/2000/svg" class="inline w-3 h-3" fill="currentColor" viewBox="0 0 16 16"><ellipse cx="8" cy="8" rx="7" ry="5"/></svg></span>
+        </label>
+        <textarea id="description" name="description" required rows="4" class="w-full px-4 py-2 bg-slate-700 border border-slate-600 rounded-md" placeholder="Describe your issue..."></textarea>
+      </div>
+      <!-- Service Method -->
+      <div class="mb-4">
+        <label for="serviceMethod" class="block text-sm font-medium text-slate-300 mb-1 flex items-center gap-1">
+          Service Method <span class="ml-1 text-pink-400" title="Required"><svg xmlns="http://www.w3.org/2000/svg" class="inline w-3 h-3" fill="currentColor" viewBox="0 0 16 16"><path d="M8 2 L14 8 L8 14 L2 8 Z"/></svg></span>
+        </label>
+        <div class="flex gap-2">
+          <input type="radio" id="dropoff" name="serviceMethod" value="Drop-off" required class="hidden peer/serviceMethod" />
+          <label for="dropoff" class="cursor-pointer px-4 py-2 rounded-md border border-slate-600 bg-slate-700 text-slate-200 data-[checked=true]:bg-cyan-600 data-[checked=true]:text-white transition select-none" data-checked="false">
+            Drop-off
+            <span class="block text-xs text-cyan-100 font-normal">Bring your device to our service center</span>
+          </label>
+          <input type="radio" id="courier" name="serviceMethod" value="Courier" class="hidden peer/serviceMethod" />
+          <label for="courier" class="cursor-pointer px-4 py-2 rounded-md border border-slate-600 bg-slate-700 text-slate-200 data-[checked=true]:bg-cyan-600 data-[checked=true]:text-white transition select-none" data-checked="false">
+            Courier
+            <span class="block text-xs text-cyan-100 font-normal">We'll arrange pickup and delivery</span>
+          </label>
+          <% if (user.accountType === 'business' || user.accountType === 'Business') { %>
+            <input type="radio" id="onsite" name="serviceMethod" value="On-site" class="hidden peer/serviceMethod" />
+            <label for="onsite" class="cursor-pointer px-4 py-2 rounded-md border border-slate-600 bg-slate-700 text-slate-200 data-[checked=true]:bg-cyan-600 data-[checked=true]:text-white transition select-none" data-checked="false">
+              On-site
+              <span class="block text-xs text-cyan-100 font-normal">A technician will visit your business location</span>
+            </label>
+          <% } %>
+        </div>
+      </div>
+      <!-- Address -->
+      <div class="mb-4">
+        <label for="address" class="block text-sm font-medium text-slate-300 mb-1">Address</label>
+        <input type="text" id="address" name="address" class="w-full px-4 py-2 bg-slate-700 border border-slate-600 rounded-md" placeholder="Pickup or service address (if applicable)">
+      </div>
+      <!-- Urgency -->
+      <div class="mb-4">
+        <label for="urgency" class="block text-sm font-medium text-slate-300 mb-1 flex items-center gap-1">
+          Urgency <span class="ml-1 text-red-400" title="Required"><svg xmlns="http://www.w3.org/2000/svg" class="inline w-3 h-3" fill="currentColor" viewBox="0 0 16 16"><rect x="7" y="2" width="2" height="12" rx="1"/><rect x="2" y="7" width="12" height="2" rx="1"/></svg></span>
+        </label>
+        <div class="flex gap-2">
+          <input type="radio" id="urgency-low" name="urgency" value="Low" required class="hidden peer/urgency" />
+          <label for="urgency-low" class="cursor-pointer px-4 py-2 rounded-md border border-slate-600 bg-slate-700 text-slate-200 transition select-none data-[checked=true]:bg-green-600 data-[checked=true]:text-white" data-checked="false">
+            Low
+            <span class="block text-xs text-green-200 font-normal">Standard response<br>(24-48 hours)</span>
+          </label>
+          <input type="radio" id="urgency-medium" name="urgency" value="Medium" class="hidden peer/urgency" />
+          <label for="urgency-medium" class="cursor-pointer px-4 py-2 rounded-md border border-slate-600 bg-slate-700 text-slate-200 transition select-none data-[checked=true]:bg-yellow-400 data-[checked=true]:text-slate-900" data-checked="false">
+            Medium
+            <span class="block text-xs text-yellow-800 font-normal">Priority response<br>(8-12 hours)</span>
+          </label>
+          <input type="radio" id="urgency-high" name="urgency" value="High" class="hidden peer/urgency" />
+          <label for="urgency-high" class="cursor-pointer px-4 py-2 rounded-md border border-slate-600 bg-slate-700 text-slate-200 transition select-none data-[checked=true]:bg-red-600 data-[checked=true]:text-white" data-checked="false">
+            High
+            <span class="block text-xs text-red-100 font-normal">Immediate response<br>(1-4 hours)</span>
+          </label>
+        </div>
+      </div>
+      <!-- Department (Business only) -->
+      <% if (user.accountType === 'business' || user.accountType === 'Business') { %>
+      <div class="mb-4">
+        <label for="department" class="block text-sm font-medium text-slate-300 mb-1">Department (optional)</label>
+        <select id="department" name="department" class="w-full px-4 py-2 bg-slate-700 border border-slate-600 rounded-md">
+          <option value="">Select department</option>
+          <option value="Accounts">Accounts</option>
+          <option value="IT">IT</option>
+          <option value="General">General</option>
+        </select>
+      </div>
+      <% } %>
+      <!-- Attachment -->
+      <div class="mb-6">
+        <label for="attachment" class="block text-sm font-medium text-slate-300 mb-1">Attachment</label>
+        <input type="file" id="attachment" name="attachment" class="w-full px-4 py-2 bg-slate-700 border border-slate-600 rounded-md" accept="image/*,.pdf,.doc,.docx">
+        <p class="mt-1 text-sm text-slate-400">Max file size: 5MB. Supported: Images, PDF, DOC</p>
+      </div>
+      <!-- Submit -->
+      <div class="flex justify-end">
+        <button type="submit" class="bg-cyan-600 hover:bg-cyan-700 text-white font-medium py-2 px-6 rounded-md">Submit Request</button>
+      </div>
+    </form>
+  </div>
+</div>
+<script>
+// Fix for radio button chooseable style: only one can be active at a time
+// This script will update the data-checked attribute for the labels
+
+document.addEventListener('DOMContentLoaded', function() {
+  const serviceRadios = document.querySelectorAll('input[name="serviceMethod"]');
+  const serviceLabels = Array.from(serviceRadios).map(radio => document.querySelector(`label[for='${radio.id}']`));
+
+  serviceRadios.forEach(radio => {
+    radio.addEventListener('change', function() {
+      serviceLabels.forEach(label => label.setAttribute('data-checked', 'false'));
+      const checkedLabel = document.querySelector(`label[for='${this.id}']`);
+      if (checkedLabel) checkedLabel.setAttribute('data-checked', 'true');
+    });
+    // On page load, set checked state if already selected
+    if (radio.checked) {
+      const checkedLabel = document.querySelector(`label[for='${radio.id}']`);
+      if (checkedLabel) checkedLabel.setAttribute('data-checked', 'true');
+    }
+  });
+
+  // Also handle Urgency radio group
+  const urgencyRadios = document.querySelectorAll('input[name="urgency"]');
+  const urgencyLabels = Array.from(urgencyRadios).map(radio => document.querySelector(`label[for='${radio.id}']`));
+
+  urgencyRadios.forEach(radio => {
+    radio.addEventListener('change', function() {
+      urgencyLabels.forEach(label => label.setAttribute('data-checked', 'false'));
+      const checkedLabel = document.querySelector(`label[for='${this.id}']`);
+      if (checkedLabel) checkedLabel.setAttribute('data-checked', 'true');
+    });
+    if (radio.checked) {
+      const checkedLabel = document.querySelector(`label[for='${radio.id}']`);
+      if (checkedLabel) checkedLabel.setAttribute('data-checked', 'true');
+    }
+  });
+});
+</script>

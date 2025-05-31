@@ -1,0 +1,103 @@
+<nav class="bg-slate-800 border-b border-slate-700">
+  <div class="container mx-auto px-6 py-3">
+    <div class="flex items-center justify-between">
+      <div class="flex items-center">
+        <a href="<%= locals.user ? '/dashboard' : '/' %>" class="flex items-center">
+          <svg xmlns="http://www.w3.org/2000/svg" width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" class="text-cyan-400">
+            <path d="M22 12h-4l-3 9L9 3l-3 9H2"></path>
+          </svg>
+          <span class="ml-3 text-white font-bold">Dern-Support</span>
+        </a>
+        
+        <% if (locals.user) { %>
+          <div class="ml-10 hidden md:flex items-center space-x-6">
+            <a href="/dashboard" class="<%= currentPath === '/dashboard' ? 'text-cyan-400' : 'text-slate-300 hover:text-cyan-400' %> transition duration-200">
+              Dashboard
+            </a>
+            <a href="/support/history" class="<%= currentPath.startsWith('/support') ? 'text-cyan-400' : 'text-slate-300 hover:text-cyan-400' %> transition duration-200">
+              Support
+            </a>
+            <a href="/knowledge" class="<%= currentPath.startsWith('/knowledge') ? 'text-cyan-400' : 'text-slate-300 hover:text-cyan-400' %> transition duration-200">
+              Knowledge Base
+            </a>
+            <a href="/inventory" class="<%= currentPath.startsWith('/inventory') ? 'text-cyan-400' : 'text-slate-300 hover:text-cyan-400' %> transition duration-200">
+              Inventory
+            </a>
+            <% if (locals.user.isAdmin) { %>
+              <a href="/admin/dashboard" class="<%= currentPath.startsWith('/admin') ? 'text-cyan-400' : 'text-slate-300 hover:text-cyan-400' %> transition duration-200">
+                Admin
+              </a>
+            <% } %>
+          </div>
+        <% } %>
+      </div>
+      
+      <% if (locals.user) { %>
+        <div class="flex items-center">
+          <div class="relative group" id="user-menu-container">
+            <button id="user-menu-button" type="button" class="flex items-center text-slate-300 hover:text-cyan-400 focus:outline-none transition duration-200">
+              <span class="mr-2"><%= locals.user.name %></span>
+              <svg xmlns="http://www.w3.org/2000/svg" width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
+                <circle cx="12" cy="12" r="10"></circle>
+                <circle cx="12" cy="10" r="3"></circle>
+                <path d="M7 20.662V19c0-1.657 2.239-3 5-3s5 1.343 5 3v1.662"></path>
+              </svg>
+            </button>
+            <div id="user-menu-dropdown" class="absolute right-0 top-full w-48 mt-2 bg-slate-800 border border-slate-700 rounded-md shadow-lg py-1 z-50 hidden">
+              <a href="/profile" class="block px-4 py-2 text-sm text-slate-300 hover:bg-slate-700 hover:text-cyan-400">
+                Profile
+              </a>
+              <a href="/feedback" class="block px-4 py-2 text-sm text-slate-300 hover:bg-slate-700 hover:text-cyan-400">
+                Submit Feedback
+              </a>
+              <a href="/cart" class="block px-4 py-2 text-sm text-slate-300 hover:bg-slate-700 hover:text-cyan-400">
+                Cart
+              </a>
+              <hr class="border-slate-700 my-1">
+              <a href="/logout" class="block px-4 py-2 text-sm text-slate-300 hover:bg-slate-700 hover:text-red-400">
+                Logout
+              </a>
+            </div>
+          </div>
+        </div>
+      <% } %>
+    </div>
+  </div>
+</nav>
+<script>
+(function() {
+  const btn = document.getElementById('user-menu-button');
+  const dropdown = document.getElementById('user-menu-dropdown');
+  let hideTimeout;
+
+  btn.addEventListener('click', function(e) {
+    e.stopPropagation();
+    if (dropdown.classList.contains('hidden')) {
+      dropdown.classList.remove('hidden');
+      clearTimeout(hideTimeout);
+      hideTimeout = setTimeout(() => {
+        dropdown.classList.add('hidden');
+      }, 2000);
+    } else {
+      dropdown.classList.add('hidden');
+      clearTimeout(hideTimeout);
+    }
+  });
+
+  dropdown.addEventListener('mouseenter', function() {
+    clearTimeout(hideTimeout);
+  });
+  dropdown.addEventListener('mouseleave', function() {
+    hideTimeout = setTimeout(() => {
+      dropdown.classList.add('hidden');
+    }, 2000);
+  });
+
+  document.addEventListener('click', function(e) {
+    if (!btn.contains(e.target) && !dropdown.contains(e.target)) {
+      dropdown.classList.add('hidden');
+      clearTimeout(hideTimeout);
+    }
+  });
+})();
+</script>

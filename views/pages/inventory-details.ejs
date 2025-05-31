@@ -1,0 +1,41 @@
+<!-- Inventory Item Details Page -->
+<div class="max-w-2xl mx-auto bg-slate-800 rounded-lg shadow-lg p-8 mt-8">
+  <div class="flex flex-col md:flex-row gap-8 items-center mb-8">
+    <img src="<%= item.imageUrl %>" alt="<%= item.name %>" class="w-40 h-40 object-cover rounded-md border border-slate-700">
+    <div class="flex-1">
+      <h2 class="text-3xl font-bold mb-2"><%= item.name %></h2>
+      <p class="text-slate-400 mb-2">Category: <span class="text-cyan-400"><%= item.category %></span></p>
+      <p class="text-slate-400 mb-2">Quantity:
+        <span class="px-2 py-1 rounded-full text-xs font-semibold
+          <%= item.quantity === 0 ? 'bg-red-500/20 text-red-400' :
+              item.quantity < 5 ? 'bg-yellow-500/20 text-yellow-400' :
+              'bg-green-500/20 text-green-400' %>">
+          <%= item.quantity %>
+        </span>
+      </p>
+      <p class="text-slate-400 mb-2">Last Restocked: <%= item.lastRestocked ? new Date(item.lastRestocked).toLocaleDateString() : 'N/A' %></p>
+    </div>
+  </div>
+  <div class="mb-6">
+    <h3 class="text-lg font-semibold mb-2">Description</h3>
+    <p class="text-slate-300"><%= item.description %></p>
+  </div>
+  <% if (locals.user && item.quantity > 0) { %>
+    <form action="/cart/add" method="POST" class="flex items-center gap-4 mb-8">
+      <input type="hidden" name="itemId" value="<%= item._id %>">
+      <label for="quantity" class="text-slate-300">Quantity:</label>
+      <input type="number" id="quantity" name="quantity" min="1" max="<%= item.quantity %>" value="1" class="w-20 px-2 py-1 bg-slate-700 border border-slate-600 rounded-md text-slate-200">
+      <button type="submit" class="bg-cyan-600 hover:bg-cyan-700 text-white px-6 py-2 rounded-md font-semibold transition duration-200">Add to Cart</button>
+    </form>
+  <% } else if (item.quantity === 0) { %>
+    <div class="text-red-400 font-semibold mb-8">Out of Stock</div>
+  <% } %>
+  <% if (locals.user && locals.user.isAdmin) { %>
+    <div class="flex justify-end gap-4 mt-8">
+      <a href="/inventory/edit/<%= item._id %>" class="bg-yellow-500 hover:bg-yellow-600 text-slate-900 px-6 py-2 rounded-md font-semibold transition duration-200">Edit</a>
+      <form action="/inventory/item/<%= item._id %>?_method=DELETE" method="POST" onsubmit="return confirm('Are you sure you want to delete this item?');">
+        <button type="submit" class="bg-red-600 hover:bg-red-700 text-white px-6 py-2 rounded-md font-semibold transition duration-200">Delete</button>
+      </form>
+    </div>
+  <% } %>
+</div>

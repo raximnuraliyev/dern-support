@@ -1,0 +1,11 @@
+<% if (locals.success && locals.success.length > 0) { %>
+  <div class="alert success mb-6">
+    <%= locals.success %>
+  </div>
+<% } %>
+
+<% if (locals.error && locals.error.length > 0) { %>
+  <div class="alert error mb-6">
+    <%= locals.error %>
+  </div>
+<% } %>

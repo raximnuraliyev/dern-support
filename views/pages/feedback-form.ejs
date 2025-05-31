@@ -1,0 +1,108 @@
+<%- include('../partials/header') %>
+    <%- include('../partials/messages') %>
+
+        <div
+            class="container mx-auto max-w-lg mt-14 bg-gradient-to-br from-[#0F172B] to-[#1D293D] p-8 rounded-2xl shadow-lg border border-blue-900">
+            <h1 class="text-3xl font-extrabold text-cyan-400 mb-6 flex items-center gap-2">
+                <svg xmlns="http://www.w3.org/2000/svg" class="h-8 w-8 text-cyan-400" fill="none" viewBox="0 0 24 24"
+                    stroke="currentColor" aria-hidden="true">
+                    <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2"
+                        d="M7 8h10M7 12h4m1 8a9 9 0 100-18 9 9 0 000 18zm0 0v-2a3 3 0 00-3-3H7a3 3 0 00-3 3v2" />
+                </svg>
+                <%= title %>
+            </h1>
+            <form action="/feedback" method="POST" class="space-y-8" novalidate>
+                <div>
+                    <label for="message" class="block font-semibold text-cyan-300 mb-1">Your Feedback</label>
+                    <textarea id="message" name="message" rows="4"
+                        class="w-full border border-blue-900 rounded-lg p-3 focus:ring-2 focus:ring-cyan-400 focus:outline-none transition min-h-[3rem] resize-none text-lg bg-[#1D293D] text-slate-100 placeholder-slate-400"
+                        required placeholder="Share your thoughts..." aria-label="Feedback message"
+                        onfocus="this.rows=8" onblur="if(!this.value)this.rows=4"></textarea>
+                </div>
+                <div>
+                    <span class="block font-semibold text-cyan-300 mb-2 flex items-center gap-2">Rating <span
+                            class="text-red-400">*</span>
+                        <span class="flex gap-1 ml-2">
+                            <% for(let i=1; i<=5; i++) { %>
+                                <svg xmlns="http://www.w3.org/2000/svg" class="h-5 w-5" fill="none" viewBox="0 0 24 24"
+                                    stroke="currentColor" aria-hidden="true">
+                                    <polygon fill="currentColor"
+                                        points="12 2 15.09 8.26 22 9.27 17 14.14 18.18 21.02 12 17.77 5.82 21.02 7 14.14 2 9.27 8.91 8.26 12 2" />
+                                </svg>
+                                <% } %>
+                        </span>
+                    </span>
+                    <div class="flex gap-3" role="radiogroup" aria-label="Star rating" id="star-rating-group">
+                        <% const ratings=[ { value: 1, label: 'Terrible' }, { value: 2, label: 'Poor' }, { value: 3,
+                            label: 'Average' }, { value: 4, label: 'Good' }, { value: 5, label: 'Excellent' } ]; %>
+                            <% ratings.forEach(r=> { %>
+                                <input type="radio" name="rating" id="rating-<%= r.value %>" value="<%= r.value %>"
+                                    class="hidden peer" required aria-required="true" />
+                                <label for="rating-<%= r.value %>"
+                                    class="star-label cursor-pointer flex flex-col items-center px-2 py-1 rounded-lg border border-blue-900 bg-[#1D293D] text-cyan-200 font-semibold shadow-sm transition hover:bg-[#0F172B] text-lg touch-manipulation"
+                                    aria-label="<%= r.value %> star - <%= r.label %>" style="user-select: none;">
+                                    <svg xmlns="http://www.w3.org/2000/svg" class="h-7 w-7 mb-1 star-svg"
+                                        fill="currentColor" viewBox="0 0 20 20" stroke="none" aria-hidden="true"
+                                        focusable="false">
+                                        <title>
+                                            <%= r.value %> star - <%= r.label %>
+                                        </title>
+                                        <polygon
+                                            points="10,2 12.59,7.36 18.51,8.09 14,12.26 15.18,18.09 10,15.1 4.82,18.09 6,12.26 1.49,8.09 7.41,7.36" />
+                                    </svg>
+                                    <span class="sr-only">
+                                        <%= r.value %> star - <%= r.label %>
+                                    </span>
+                                    <span>
+                                        <%= r.value %>
+                                    </span>
+                                </label>
+                                <% }) %>
+                    </div>
+                    <span class="text-xs text-slate-400 mt-1 block">Please select a rating.</span>
+                </div>
+                <button type="submit"
+                    class="w-full bg-cyan-700 hover:bg-cyan-800 text-white font-bold py-4 rounded-lg shadow transition text-lg flex items-center justify-center gap-2 touch-manipulation">
+                    <svg xmlns="http://www.w3.org/2000/svg" class="h-6 w-6" fill="none" viewBox="0 0 24 24"
+                        stroke="currentColor" aria-hidden="true">
+                        <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M5 13l4 4L19 7" />
+                    </svg>
+                    Submit Feedback
+                </button>
+            </form>
+            <div class="mt-6 text-center">
+                <a href="/feedback/all" class="text-cyan-400 hover:underline font-semibold">View all feedback</a>
+            </div>
+        </div>
+
+        <script>
+            // Auto-expand textarea on input
+            const textarea = document.getElementById('message');
+            if (textarea) {
+                textarea.addEventListener('input', function () {
+                    this.style.height = 'auto';
+                    this.style.height = (this.scrollHeight) + 'px';
+                });
+            }
+
+            // Star fill effect for rating
+            const ratingInputs = document.querySelectorAll('input[name="rating"]');
+            const starLabels = document.querySelectorAll('.star-label');
+            function updateStars(val) {
+                starLabels.forEach((label, idx) => {
+                    if (idx < val) {
+                        label.querySelector('.star-svg').style.color = '#fff';
+                    } else {
+                        label.querySelector('.star-svg').style.color = '#67e8f9';
+                    }
+                });
+            }
+            ratingInputs.forEach((input, idx) => {
+                input.addEventListener('change', function () {
+                    updateStars(Number(this.value));
+                });
+            });
+            // On page load, if a rating is preselected
+            const checked = document.querySelector('input[name="rating"]:checked');
+            if (checked) updateStars(Number(checked.value));
+        </script>

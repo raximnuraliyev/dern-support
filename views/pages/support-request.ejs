@@ -1,0 +1,102 @@
+<div class="max-w-3xl mx-auto grid grid-cols-1 md:grid-cols-3 gap-6">
+  <!-- Request Details -->
+  <div class="bg-slate-800 rounded-lg shadow-lg p-6 md:col-span-2">
+    <div class="flex justify-between items-start mb-6">
+      <div>
+        <h2 class="text-2xl font-semibold mb-2">Ticket #<%= supportRequest._id.toString().slice(-6) %></h2>
+        <p class="text-slate-400">Submitted on <%= new Date(supportRequest.createdAt).toLocaleString() %></p>
+      </div>
+      <span class="px-3 py-1 rounded-full text-sm
+        <%= supportRequest.status === 'Pending' ? 'bg-yellow-500/20 text-yellow-400' :
+           supportRequest.status === 'In Progress' ? 'bg-blue-500/20 text-blue-400' :
+           supportRequest.status === 'Resolved' ? 'bg-green-500/20 text-green-400' :
+           'bg-red-500/20 text-red-400' %>">
+        <%= supportRequest.status %>
+      </span>
+    </div>
+    <div class="mb-6">
+      <h3 class="text-lg font-semibold mb-4">Issue Details</h3>
+      <div class="bg-slate-700/30 rounded-lg p-4">
+        <div class="mb-4">
+          <p class="text-sm text-slate-400 mb-1">Device Type</p>
+          <p class="font-medium"><%= supportRequest.deviceType %></p>
+        </div>
+        <div>
+          <p class="text-sm text-slate-400 mb-1">Description</p>
+          <p class="whitespace-pre-wrap"><%= supportRequest.description %></p>
+        </div>
+      </div>
+    </div>
+    <% if (supportRequest.attachment) { %>
+      <div class="mb-6">
+        <h3 class="text-lg font-semibold mb-4">Attachment</h3>
+        <div class="bg-slate-700/30 rounded-lg p-4">
+          <a href="/uploads/support/<%= supportRequest.attachment %>" target="_blank" class="text-cyan-400 hover:underline">Download/View Attachment</a>
+        </div>
+      </div>
+    <% } %>
+    <% if (supportRequest.jobNotes) { %>
+      <div class="mb-6">
+        <h3 class="text-lg font-semibold mb-4">Job Notes</h3>
+        <div class="bg-slate-700/30 rounded-lg p-4">
+          <p class="whitespace-pre-wrap"><%= supportRequest.jobNotes %></p>
+        </div>
+      </div>
+    <% } %>
+    <% if (supportRequest.resolution) { %>
+      <div class="mb-6">
+        <h3 class="text-lg font-semibold mb-4">Resolution</h3>
+        <div class="bg-slate-700/30 rounded-lg p-4">
+          <p class="whitespace-pre-wrap"><%= supportRequest.resolution %></p>
+        </div>
+      </div>
+    <% } %>
+  </div>
+  <!-- Sidebar Information -->
+  <div class="space-y-6">
+    <div class="bg-slate-800 rounded-lg shadow-lg p-6">
+      <h3 class="text-lg font-semibold mb-4">User Information</h3>
+      <div class="text-slate-300">
+        <p><strong>Name:</strong> <%= supportRequest.user.name %></p>
+        <p><strong>Email:</strong> <%= supportRequest.user.email %></p>
+        <p><strong>Account Type:</strong> <%= supportRequest.user.accountType %></p>
+      </div>
+    </div>
+    <% if (supportRequest.businessInfo) { %>
+      <div class="bg-slate-800 rounded-lg shadow-lg p-6">
+        <h3 class="text-lg font-semibold mb-4">Business Information</h3>
+        <div class="text-slate-300">
+          <p><strong>Company:</strong> <%= supportRequest.businessInfo.companyName %></p>
+          <p><strong>Department:</strong> <%= supportRequest.businessInfo.department %></p>
+          <p><strong>Priority:</strong> <%= supportRequest.businessInfo.priority %></p>
+          <p><strong>Contact:</strong> <%= supportRequest.businessInfo.contactPerson %></p>
+        </div>
+      </div>
+    <% } %>
+    <% if (user && user.isAdmin) { %>
+      <div class="bg-slate-800 rounded-lg shadow-lg p-6">
+        <h3 class="text-lg font-semibold mb-4">Admin Actions</h3>
+        <form action="/support/<%= supportRequest._id %>/update" method="POST">
+          <div class="mb-4">
+            <label for="status" class="block text-sm font-medium text-slate-300 mb-1">Status</label>
+            <select id="status" name="status" class="w-full px-4 py-2 bg-slate-700 border border-slate-600 rounded-md">
+              <option value="Pending" <%= supportRequest.status === 'Pending' ? 'selected' : '' %>>Pending</option>
+              <option value="In Progress" <%= supportRequest.status === 'In Progress' ? 'selected' : '' %>>In Progress</option>
+              <option value="Resolved" <%= supportRequest.status === 'Resolved' ? 'selected' : '' %>>Resolved</option>
+              <option value="Cancelled" <%= supportRequest.status === 'Cancelled' ? 'selected' : '' %>>Cancelled</option>
+            </select>
+          </div>
+          <div class="mb-4">
+            <label for="jobNotes" class="block text-sm font-medium text-slate-300 mb-1">Job Notes</label>
+            <textarea id="jobNotes" name="jobNotes" rows="3" class="w-full px-4 py-2 bg-slate-700 border border-slate-600 rounded-md"><%= supportRequest.jobNotes || '' %></textarea>
+          </div>
+          <div class="mb-4">
+            <label for="resolution" class="block text-sm font-medium text-slate-300 mb-1">Resolution</label>
+            <textarea id="resolution" name="resolution" rows="3" class="w-full px-4 py-2 bg-slate-700 border border-slate-600 rounded-md"><%= supportRequest.resolution || '' %></textarea>
+          </div>
+          <button type="submit" class="w-full bg-cyan-600 hover:bg-cyan-700 text-white font-medium py-2 px-4 rounded-md">Update Ticket</button>
+        </form>
+      </div>
+    <% } %>
+  </div>
+</div>

@@ -1,0 +1,106 @@
+<div class="bg-slate-800 rounded-lg shadow-lg p-6">
+  <!-- Search and Filter -->
+  <div class="mb-6">
+    <div class="flex flex-col md:flex-row gap-4">
+      <div class="flex-1">
+        <input type="text" id="searchTickets" placeholder="Search by ticket ID or user" class="w-full px-4 py-2 bg-slate-700 border border-slate-600 rounded-md">
+      </div>
+      <div class="flex gap-4">
+        <select id="statusFilter" class="px-4 py-2 bg-slate-700 border border-slate-600 rounded-md">
+          <option value="">All Statuses</option>
+          <option value="Pending">Pending</option>
+          <option value="In Progress">In Progress</option>
+          <option value="Resolved">Resolved</option>
+          <option value="Cancelled">Cancelled</option>
+        </select>
+        <select id="deviceFilter" class="px-4 py-2 bg-slate-700 border border-slate-600 rounded-md">
+          <option value="">All Devices</option>
+          <option value="Laptop">Laptop</option>
+          <option value="Desktop">Desktop</option>
+          <option value="Printer">Printer</option>
+          <option value="Network">Network</option>
+          <option value="Other">Other</option>
+        </select>
+      </div>
+    </div>
+  </div>
+
+  <!-- Support Tickets Table -->
+  <div class="overflow-x-auto">
+    <table class="w-full">
+      <thead class="bg-slate-700">
+        <tr>
+          <th class="px-4 py-3 text-left">Ticket ID</th>
+          <th class="px-4 py-3 text-left">User</th>
+          <th class="px-4 py-3 text-left">Device Type</th>
+          <th class="px-4 py-3 text-left">Description</th>
+          <th class="px-4 py-3 text-left">Status</th>
+          <th class="px-4 py-3 text-left">Assigned To</th>
+          <th class="px-4 py-3 text-left">Created</th>
+          <th class="px-4 py-3 text-left">Actions</th>
+        </tr>
+      </thead>
+      <tbody>
+        <% supportRequests.forEach(request => { %>
+          <tr class="border-b border-slate-700 hover:bg-slate-700/50">
+            <td class="px-4 py-3">#<%= request._id.toString().slice(-6) %></td>
+            <td class="px-4 py-3">
+              <div>
+                <%= request.user.name %>
+                <span class="text-sm text-slate-400 block"><%= request.user.email %></span>
+              </div>
+            </td>
+            <td class="px-4 py-3"><%= request.deviceType %></td>
+            <td class="px-4 py-3"><%= request.description.substring(0, 50) %>...</td>
+            <td class="px-4 py-3">
+              <span class="px-2 py-1 rounded-full text-xs
+                <%= request.status === 'Pending' ? 'bg-yellow-500/20 text-yellow-400' :
+                   request.status === 'In Progress' ? 'bg-blue-500/20 text-blue-400' :
+                   request.status === 'Resolved' ? 'bg-green-500/20 text-green-400' :
+                   'bg-red-500/20 text-red-400' %>">
+                <%= request.status %>
+              </span>
+            </td>
+            <td class="px-4 py-3">
+              <%= request.assignedTo ? request.assignedTo.name : 'Unassigned' %>
+            </td>
+            <td class="px-4 py-3"><%= new Date(request.createdAt).toLocaleDateString() %></td>
+            <td class="px-4 py-3">
+              <a href="/support/<%= request._id %>" class="text-cyan-400 hover:text-cyan-300">View Details</a>
+            </td>
+          </tr>
+        <% }); %>
+      </tbody>
+    </table>
+  </div>
+</div>
+
+<script>
+  // Search and filter functionality
+  const searchInput = document.getElementById('searchTickets');
+  const statusFilter = document.getElementById('statusFilter');
+  const deviceFilter = document.getElementById('deviceFilter');
+
+  function filterTickets() {
+    const searchTerm = searchInput.value.toLowerCase();
+    const status = statusFilter.value;
+    const device = deviceFilter.value;
+
+    document.querySelectorAll('tbody tr').forEach(row => {
+      const ticketId = row.cells[0].textContent.toLowerCase();
+      const userName = row.cells[1].textContent.toLowerCase();
+      const deviceType = row.cells[2].textContent;
+      const ticketStatus = row.cells[4].textContent.trim();
+
+      const matchesSearch = ticketId.includes(searchTerm) || userName.includes(searchTerm);
+      const matchesStatus = !status || ticketStatus === status;
+      const matchesDevice = !device || deviceType === device;
+
+      row.style.display = matchesSearch && matchesStatus && matchesDevice ? '' : 'none';
+    });
+  }
+
+  searchInput.addEventListener('input', filterTickets);
+  statusFilter.addEventListener('change', filterTickets);
+  deviceFilter.addEventListener('change', filterTickets);
+</script>
